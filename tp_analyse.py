@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 ################################################################################################
 # Listen to bidirectional network communication (to and from TP-Link switches / easy switch tool

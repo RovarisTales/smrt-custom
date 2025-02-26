@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import netifaces
 import socket, random, logging
@@ -155,7 +155,7 @@ class Network:
         )
 
     def set(self, username, password, payload):
-        self.query(Protocol.GET, [(Protocol.get_id("get_token_id"), b'')])
+        self.query(Protocol.GET, [(Protocol.get_id("get_token_id"), b'\x01')])
         real_payload = self.login_dict(username, password)
         real_payload += payload
         header, payload = self.query(

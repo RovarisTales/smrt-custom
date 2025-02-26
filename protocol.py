@@ -83,6 +83,7 @@ class Protocol:
         512:   ('str',   'username',	0),
         514:   ('str',   'password',	0),
         773:   ('bool',  'reboot',	1,	"Reboot the device"),
+        774:   ('bool', 'shutdown', 1, "shutdown device"),
         2304:  ('action','save',	1,	"Saves the current configuration"),
         2305:  ('action','get_token_id',1,	"Unknown"),
         4352:  ('bool',  'igmp_snooping', 0),

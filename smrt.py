@@ -1,6 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-import socket, time, random, argparse, logging
+import socket, time, random, argparse, logging, struct
 
 from protocol import Protocol
 from network import Network, InterfaceProblem
@@ -26,6 +26,9 @@ def main():
     parser.add_argument('--vlan_pvid')
     parser.add_argument('--delete', action="store_true")
     parser.add_argument('--loglevel', '-l', type=loglevel, default='INFO')
+    parser.add_argument('--host-mac')
+    parser.add_argument('--ip-address')
+    parser.add_argument('--port', type=int, help="Port number to disable")
     parser.add_argument('action', default=None, nargs='?')
     args = parser.parse_args()
 
@@ -55,7 +58,7 @@ def main():
 
         if args.action == "vlan" and args.vlan:
             if args.vlan_member or args.vlan_tagged or args.delete:
-                if (args.delete):
+                if args.delete:
                     v = Protocol.set_vlan(int(args.vlan), 0, 0, "")
                 else:
                     v = Protocol.set_vlan(int(args.vlan), ports2byte(args.vlan_member), ports2byte(args.vlan_tagged), args.vlan_name)
@@ -65,8 +68,10 @@ def main():
                 l = []
                 for port in ports2list(args.vlan_pvid):
                     if port != 0:
-                        l.append( (actions["pvid"], Protocol.set_pvid(args.vlan, port)) )
+                        l.append((actions["pvid"], Protocol.set_pvid(args.vlan, port)))
             header, payload = net.set(args.username, args.password, l)
+        elif args.action == "reboot":
+            header, payload = net.set(args.username, args.password, [(actions["shutdown"], b'\x01')])
         elif args.action in actions:
             header, payload = net.query(Protocol.GET, [(actions[args.action], b'')])
         print(*payload, sep="\n")
